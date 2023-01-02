@@ -8,6 +8,7 @@ road_w = int(width / 1.6)
 roadmark_w = int(width/80)
 right_lane = width/2 + road_w/4
 left_lane = width/2 - road_w/4
+speed = 1
 
 pygame.init()
 running = True
@@ -31,11 +32,19 @@ otherCar_loc = otherCar.get_rect()
 otherCar_loc.center = left_lane, height*0.2
 
 
+counter = 0
 # game loop
 while running:
 
+    # aumento de velocidad y niveles
+    counter += 1
+    if counter == 1024:
+        speed += 0.15
+        counter = 0
+        print(f"level up")
+
     # animar vehículo enemigo
-    otherCar_loc[1] += 3
+    otherCar_loc[1] += speed
     if otherCar_loc[1] > height:
         if random.randint(0, 1) == 0:
             otherCar_loc.center = right_lane, -200
@@ -43,11 +52,13 @@ while running:
             otherCar_loc.center = left_lane, -200
 
     # end game
-    if car_loc[0] == otherCar_loc[0] and otherCar_loc[1] > car_loc[1]:
+    if car_loc[0] == otherCar_loc[0] and otherCar_loc[1] > car_loc[1] - 250:
         print("GAME OVER!! PAPU, PERDISTE NOOB")
-        running = False
+        break
 
     for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
         if event.type == pygame.KEYDOWN:
             if event.key in [K_a, K_LEFT]:

@@ -8,6 +8,7 @@ road_w = int(width / 1.6)
 roadmark_w = int(width/80)
 right_lane = width/2 + road_w/4
 left_lane = width/2 - road_w/4
+level = 1
 speed = 1
 
 pygame.init()
@@ -31,17 +32,14 @@ otherCar = pygame.image.load("otherCar.png")
 otherCar_loc = otherCar.get_rect()
 otherCar_loc.center = left_lane, height*0.2
 
+start_time = pygame.time.get_ticks()
 
-counter = 0
 # game loop
 while running:
-
-    # aumento de velocidad y niveles
-    counter += 1
-    if counter == 1024:
-        speed += 0.15
-        counter = 0
-        print(f"level up")
+    elapsed_time = (pygame.time.get_ticks() - start_time) / 1000
+    if elapsed_time >= 30:
+        level += 1
+        speed += 3
 
     # animar vehículo enemigo
     otherCar_loc[1] += speed
@@ -53,7 +51,7 @@ while running:
 
     # end game
     if car_loc[0] == otherCar_loc[0] and otherCar_loc[1] > car_loc[1] - 250:
-        print("GAME OVER!! PAPU, PERDISTE NOOB")
+        print("GAME OVER!! PAPÚ, PERDISTE NOOB")
         break
 
     for event in pygame.event.get():

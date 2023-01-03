@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import random
+import time
 
 # Ajustar la resolución de la pantalla para que no se dibuje fuera de los límites
 size = width, height = (1200, 800)
@@ -8,15 +9,14 @@ road_w = int(width / 1.6)
 roadmark_w = int(width/80)
 right_lane = width/2 + road_w/4
 left_lane = width/2 - road_w/4
-level = 1
 speed = 1
+level = 1
 
 pygame.init()
 running = True
 screen = pygame.display.set_mode(size)
 
 pygame.display.set_caption("cNick's car game")
-
 
 # Actualizar la pantalla para mostrar los cambios
 pygame.display.update()
@@ -27,19 +27,22 @@ car_loc = car.get_rect()
 car_loc.center = right_lane, height*0.8
 
 # cargar enemigos
-
 otherCar = pygame.image.load("otherCar.png")
 otherCar_loc = otherCar.get_rect()
 otherCar_loc.center = left_lane, height*0.2
 
-start_time = pygame.time.get_ticks()
+start_time = time.time()
 
 # game loop
 while running:
-    elapsed_time = (pygame.time.get_ticks() - start_time) / 1000
-    if elapsed_time >= 30:
+    current_time = time.time()
+    elapsed_time = current_time - start_time
+
+    # aumento de velocidad y niveles
+    if elapsed_time // 15 > level:
         level += 1
-        speed += 3
+        speed += 0.50
+        print(f"level up: {level}")
 
     # animar vehículo enemigo
     otherCar_loc[1] += speed
@@ -48,10 +51,9 @@ while running:
             otherCar_loc.center = right_lane, -200
         else:
             otherCar_loc.center = left_lane, -200
-
     # end game
     if car_loc[0] == otherCar_loc[0] and otherCar_loc[1] > car_loc[1] - 250:
-        print("GAME OVER!! PAPÚ, PERDISTE NOOB")
+        print("GAME OVER!! PAPU, PERDISTE NOOB")
         break
 
     for event in pygame.event.get():
